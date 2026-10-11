@@ -20,10 +20,19 @@ Instead of being restricted to the stock WebLink apps, MeowPlay establishes a na
 - ⚡ **Zero-Copy H.264 Video Streaming**: Real-time video extraction and SPS/PPS Annex B parsing piped directly to the head unit's native WebLink decoder (e.g. 1024×600 @ 60 FPS).
 - 👆 **Responsive Touch Input**: Translates car stereo touchscreen coordinates to CarPlay normalized points and dispatches them asynchronously off the UI thread to prevent stream stalling.
 - 📶 **Dual Wi-Fi Architecture**:
-  - **Wi-Fi Hotspot Mode**: Use Android's local hotspot with configurable SSID and WPA2 passphrase.
+  - **Wi-Fi Hotspot Mode**: Use Android's local hotspot with configurable SSID, WPA2 passphrase, and 5 GHz / 2.4 GHz band selection.
   - **Wi-Fi Direct (P2P) Mode**: Zero-configuration peer-to-peer Wi-Fi connection with the iPhone.
+- 🎛️ **Comprehensive In-App Settings**:
+  - **Driver Position**: Right-Hand Drive (RHD) toggle to place CarPlay's dock/home buttons on the driver's side.
+  - **CarPlay Dock Location**: Choose between Auto, Driver's Side, or Bottom to maximize wide screen navigation space.
+  - **Display Refresh Rate**: Switch between 60 FPS (Ultra-smooth) and 30 FPS (Power & heat saving).
+  - **UI Density / Screen Scale**: Adjust simulated physical width (Large 140mm, Standard 7" 154mm, Compact 180mm) to scale CarPlay icons and grid layouts.
+  - **Audio Output Routing**: Stream audio through MeowPlay/USB stereo decoding or route directly from iPhone to the car stereo's native Bluetooth.
+  - **Audio Buffering & Voice Quality**: Apple Music TCP buffering to eliminate Wi-Fi audio stutters, and wideband voice for crystal-clear Siri and navigation prompts.
+  - **Auto-Start on Boot**: Automatically boot MeowPlay in the background when the Android device turns on.
+  - **Hardware MFi & Identity**: Choose between Local Offline MFi credentials and hardware USB CH341 auth dongles; customize CarPlay device name and stereo exit button label.
 - 🛠 **Built-in Diagnostic Console**: Full selectable and copyable real-time event logs for connection debugging, iAP2 status, and video frame rate monitoring.
-- 🚀 **Background Service & Auto-Boot**: Foreground Android service with wake-lock support and `BOOT_COMPLETED` receiver for seamless in-car operation.
+- 🚀 **Background Service**: Foreground Android service with wake-lock support for seamless in-car operation.
 
 ## 📋 Requirements
 

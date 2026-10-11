@@ -193,7 +193,7 @@ class MeowPlayBridge(private val context: Context) : WebLinkManager.Listener {
             identity = identity,
             width = displayWidth,
             height = displayHeight,
-            fps = 60
+            fps = MeowPlayConfigManager.getFps(context)
         )
         val mediaEngine = CarPlayMediaEngine(mediaSink)
 

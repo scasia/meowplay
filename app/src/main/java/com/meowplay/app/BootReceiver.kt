@@ -8,8 +8,12 @@ import android.util.Log
 class BootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         if (Intent.ACTION_BOOT_COMPLETED == intent.action) {
-            Log.i("BootReceiver", "Device booted. Starting MeowPlay 🐱 Service...")
-            MeowPlayService.start(context)
+            if (MeowPlayConfigManager.getAutoStartOnBoot(context)) {
+                Log.i("BootReceiver", "Device booted. Auto-start enabled: Starting MeowPlay 🐱 Service...")
+                MeowPlayService.start(context)
+            } else {
+                Log.i("BootReceiver", "Device booted. Auto-start disabled in MeowPlay settings.")
+            }
         }
     }
 }

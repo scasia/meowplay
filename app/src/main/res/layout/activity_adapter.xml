@@ -128,7 +128,7 @@
                     android:layout_height="wrap_content" />
             </LinearLayout>
 
-            <!-- Wi-Fi Connection & Hotspot Settings Card -->
+            <!-- 1. Wi-Fi & Networking Settings Card -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -138,7 +138,7 @@
                 android:layout_marginBottom="12dp">
 
                 <TextView
-                    android:text="CARPLAY WI-FI CONNECTION SETTINGS"
+                    android:text="@string/settings_header_wifi"
                     android:textColor="@color/accent_orange"
                     android:textSize="13sp"
                     android:textStyle="bold"
@@ -146,7 +146,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp" />
 
-                <!-- Radio Group: Hotspot vs Wi-Fi Direct -->
                 <RadioGroup
                     android:id="@+id/rgWifiMode"
                     android:layout_width="match_parent"
@@ -172,7 +171,7 @@
                         android:textColor="@color/text_primary" />
                 </RadioGroup>
 
-                <!-- Manual Hotspot Credentials Container -->
+                <!-- Hotspot Credentials & Band Container -->
                 <LinearLayout
                     android:id="@+id/layoutHotspotCredentials"
                     android:layout_width="match_parent"
@@ -195,7 +194,7 @@
                         android:textColor="@color/text_primary"
                         android:textSize="14sp"
                         android:paddingHorizontal="10dp"
-                        android:hint="e.g. CarPlay-WebLink"
+                        android:hint="e.g. MeowPlay"
                         android:textColorHint="@color/text_muted"
                         android:singleLine="true"
                         android:layout_marginBottom="8dp" />
@@ -216,22 +215,67 @@
                         android:textColor="@color/text_primary"
                         android:textSize="14sp"
                         android:paddingHorizontal="10dp"
-                        android:hint="e.g. 12345678"
+                        android:hint="e.g. meowwwww"
                         android:textColorHint="@color/text_muted"
                         android:singleLine="true"
-                        android:layout_marginBottom="10dp" />
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:text="Hotspot Frequency Band:"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="2dp" />
+
+                    <RadioGroup
+                        android:id="@+id/rgHotspotBand"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="8dp">
+
+                        <RadioButton
+                            android:id="@+id/rbBand5Ghz"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="5 GHz (Fast)"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_primary"
+                            android:checked="true" />
+
+                        <RadioButton
+                            android:id="@+id/rbBand24Ghz"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="2.4 GHz"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_primary" />
+
+                        <RadioButton
+                            android:id="@+id/rbBandAuto"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Auto"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_primary" />
+                    </RadioGroup>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="6dp">
 
                         <Button
                             android:id="@+id/btnSaveHotspot"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Save &amp; Apply"
+                            android:text="Apply Wi-Fi"
                             android:backgroundTint="@color/accent_blue"
                             android:textColor="@color/white"
                             android:textSize="12sp" />
@@ -247,16 +291,354 @@
                             android:textColor="@color/text_primary"
                             android:textSize="12sp" />
                     </LinearLayout>
-
-                    <TextView
-                        android:text="Tip: In Hotspot mode, turn on your Android Personal Hotspot with the SSID and password above. The iPhone connects reliably without Wi-Fi Direct handshake drops."
-                        android:textColor="@color/text_muted"
-                        android:textSize="11sp"
-                        android:layout_marginTop="6dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
                 </LinearLayout>
+            </LinearLayout>
 
+            <!-- 2. Display & Interface Settings Card -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/card_bg"
+                android:padding="14dp"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:text="@string/settings_header_display"
+                    android:textColor="@color/accent_blue"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp" />
+
+                <!-- Driver Side -->
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/swRightHandDrive"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Right-Hand Drive (RHD / Driver on Right)"
+                    android:textColor="@color/text_primary"
+                    android:textSize="13sp"
+                    android:layout_marginBottom="8dp" />
+
+                <!-- Dock Position -->
+                <TextView
+                    android:text="CarPlay Dock Location:"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp" />
+
+                <RadioGroup
+                    android:id="@+id/rgDockPosition"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+
+                    <RadioButton
+                        android:id="@+id/rbDockAuto"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Auto"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_primary"
+                        android:checked="true" />
+
+                    <RadioButton
+                        android:id="@+id/rbDockDriver"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Driver Side"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_primary" />
+
+                    <RadioButton
+                        android:id="@+id/rbDockBottom"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Bottom"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_primary" />
+                </RadioGroup>
+
+                <!-- Refresh Rate -->
+                <TextView
+                    android:text="Display Refresh Rate (FPS):"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp" />
+
+                <RadioGroup
+                    android:id="@+id/rgFps"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+
+                    <RadioButton
+                        android:id="@+id/rbFps60"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="60 FPS (Ultra Smooth)"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_primary"
+                        android:checked="true" />
+
+                    <RadioButton
+                        android:id="@+id/rbFps30"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="30 FPS (Power Save)"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_primary" />
+                </RadioGroup>
+
+                <!-- Display Density / Physical Size -->
+                <TextView
+                    android:text="CarPlay UI Density (Icon / Font Scale):"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp" />
+
+                <RadioGroup
+                    android:id="@+id/rgDisplayScale"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="4dp">
+
+                    <RadioButton
+                        android:id="@+id/rbScale140"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Large"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_primary" />
+
+                    <RadioButton
+                        android:id="@+id/rbScale154"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Standard (7&quot;)"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_primary"
+                        android:checked="true" />
+
+                    <RadioButton
+                        android:id="@+id/rbScale180"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Compact"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_primary" />
+                </RadioGroup>
+            </LinearLayout>
+
+            <!-- 3. Audio & System Behavior Settings Card -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/card_bg"
+                android:padding="14dp"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:text="@string/settings_header_audio"
+                    android:textColor="@color/accent_green"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp" />
+
+                <!-- Audio Output Routing -->
+                <TextView
+                    android:text="Audio Output Routing Mode:"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp" />
+
+                <RadioGroup
+                    android:id="@+id/rgAudioRouting"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="8dp">
+
+                    <RadioButton
+                        android:id="@+id/rbAudioUsb"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="MeowPlay / Stereo USB Audio (Default)"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_primary"
+                        android:checked="true" />
+
+                    <RadioButton
+                        android:id="@+id/rbAudioBt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Direct Car Bluetooth (iPhone pairs directly to stereo)"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_primary" />
+                </RadioGroup>
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/swBufferedAudio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Main Buffered Music (Apple Music TCP caching)"
+                    android:textColor="@color/text_primary"
+                    android:textSize="13sp"
+                    android:checked="true"
+                    android:layout_marginBottom="8dp" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/swSpeechHighQuality"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="High-Quality Navigation &amp; Siri Audio (Wideband)"
+                    android:textColor="@color/text_primary"
+                    android:textSize="13sp"
+                    android:checked="true"
+                    android:layout_marginBottom="8dp" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/swAutoStartBoot"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Auto-Start MeowPlay on Device Boot"
+                    android:textColor="@color/text_primary"
+                    android:textSize="13sp"
+                    android:checked="false"
+                    android:layout_marginBottom="4dp" />
+            </LinearLayout>
+
+            <!-- 4. Hardware & CarPlay Identity Card -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/card_bg"
+                android:padding="14dp"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:text="@string/settings_header_hardware"
+                    android:textColor="@color/accent_orange"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp" />
+
+                <!-- MFi Target -->
+                <TextView
+                    android:text="MFi Authentication Provider:"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp" />
+
+                <RadioGroup
+                    android:id="@+id/rgMfiTarget"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+
+                    <RadioButton
+                        android:id="@+id/rbMfiLocal"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Local Offline Assets"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_primary"
+                        android:checked="true" />
+
+                    <RadioButton
+                        android:id="@+id/rbMfiUsb"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="USB CH341 Dongle"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_primary" />
+                </RadioGroup>
+
+                <!-- Adapter Name -->
+                <TextView
+                    android:text="CarPlay Device Name:"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp" />
+
+                <EditText
+                    android:id="@+id/etAdapterName"
+                    android:layout_width="match_parent"
+                    android:layout_height="42dp"
+                    android:background="#2C2F36"
+                    android:textColor="@color/text_primary"
+                    android:textSize="14sp"
+                    android:paddingHorizontal="10dp"
+                    android:hint="MeowPlay"
+                    android:textColorHint="@color/text_muted"
+                    android:singleLine="true"
+                    android:layout_marginBottom="8dp" />
+
+                <!-- OEM Exit Label -->
+                <TextView
+                    android:text="CarPlay OEM Exit Button Label:"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp" />
+
+                <EditText
+                    android:id="@+id/etOemLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="42dp"
+                    android:background="#2C2F36"
+                    android:textColor="@color/text_primary"
+                    android:textSize="14sp"
+                    android:paddingHorizontal="10dp"
+                    android:hint="WebLink"
+                    android:textColorHint="@color/text_muted"
+                    android:singleLine="true"
+                    android:layout_marginBottom="12dp" />
+
+                <Button
+                    android:id="@+id/btnSaveAllSettings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/btn_save_all_settings"
+                    android:backgroundTint="@color/accent_blue"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:textSize="13sp" />
             </LinearLayout>
 
             <!-- Touch Input Card -->
@@ -341,7 +723,7 @@
                     android:textSize="11sp"
                     android:fontFamily="monospace"
                     android:textIsSelectable="true"
-                    android:text="[Adapter] System initialized.\n" />
+                    android:text="[MeowPlay] System initialized.\n" />
             </ScrollView>
 
         </LinearLayout>

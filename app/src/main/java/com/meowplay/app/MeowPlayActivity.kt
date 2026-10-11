@@ -22,7 +22,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.ContextCompat
+import com.shilapi.xcertplay.orchestration.ManualHotspotBand
+import com.shilapi.xcertplay.orchestration.MfiTarget
 import com.shilapi.xcertplay.orchestration.WirelessHotspotMode
 import com.weblink.sdk.WebLinkTouchPoint
 import java.text.SimpleDateFormat
@@ -42,15 +45,49 @@ class MeowPlayActivity : AppCompatActivity(), MeowPlayBridge.BridgeListener {
     private lateinit var btnToggle: Button
     private lateinit var btnKeyFrame: Button
 
-    // Wi-Fi Controls
+    // 1. Wi-Fi & Hotspot Controls
     private lateinit var rgWifiMode: RadioGroup
     private lateinit var rbModeHotspot: RadioButton
     private lateinit var rbModeDirect: RadioButton
     private lateinit var layoutHotspotCredentials: LinearLayout
     private lateinit var etHotspotSsid: EditText
     private lateinit var etHotspotPassword: EditText
+    private lateinit var rgHotspotBand: RadioGroup
+    private lateinit var rbBand5Ghz: RadioButton
+    private lateinit var rbBand24Ghz: RadioButton
+    private lateinit var rbBandAuto: RadioButton
     private lateinit var btnSaveHotspot: Button
     private lateinit var btnOpenHotspotSettings: Button
+
+    // 2. Display & Interface Controls
+    private lateinit var swRightHandDrive: SwitchCompat
+    private lateinit var rgDockPosition: RadioGroup
+    private lateinit var rbDockAuto: RadioButton
+    private lateinit var rbDockDriver: RadioButton
+    private lateinit var rbDockBottom: RadioButton
+    private lateinit var rgFps: RadioGroup
+    private lateinit var rbFps60: RadioButton
+    private lateinit var rbFps30: RadioButton
+    private lateinit var rgDisplayScale: RadioGroup
+    private lateinit var rbScale140: RadioButton
+    private lateinit var rbScale154: RadioButton
+    private lateinit var rbScale180: RadioButton
+
+    // 3. Audio & System Controls
+    private lateinit var rgAudioRouting: RadioGroup
+    private lateinit var rbAudioUsb: RadioButton
+    private lateinit var rbAudioBt: RadioButton
+    private lateinit var swBufferedAudio: SwitchCompat
+    private lateinit var swSpeechHighQuality: SwitchCompat
+    private lateinit var swAutoStartBoot: SwitchCompat
+
+    // 4. Hardware & Identity Controls
+    private lateinit var rgMfiTarget: RadioGroup
+    private lateinit var rbMfiLocal: RadioButton
+    private lateinit var rbMfiUsb: RadioButton
+    private lateinit var etAdapterName: EditText
+    private lateinit var etOemLabel: EditText
+    private lateinit var btnSaveAllSettings: Button
 
     private lateinit var bridge: MeowPlayBridge
     private val timeFmt = SimpleDateFormat("HH:mm:ss", Locale.US)
@@ -100,19 +137,9 @@ class MeowPlayActivity : AppCompatActivity(), MeowPlayBridge.BridgeListener {
             Toast.makeText(this, "Logs cleared", Toast.LENGTH_SHORT).show()
         }
 
-        // Wi-Fi Controls
-        rgWifiMode = findViewById(R.id.rgWifiMode)
-        rbModeHotspot = findViewById(R.id.rbModeHotspot)
-        rbModeDirect = findViewById(R.id.rbModeDirect)
-        layoutHotspotCredentials = findViewById(R.id.layoutHotspotCredentials)
-        etHotspotSsid = findViewById(R.id.etHotspotSsid)
-        etHotspotPassword = findViewById(R.id.etHotspotPassword)
-        btnSaveHotspot = findViewById(R.id.btnSaveHotspot)
-        btnOpenHotspotSettings = findViewById(R.id.btnOpenHotspotSettings)
-
         bridge = MeowPlayBridge.getInstance(this)
 
-        initWifiControls()
+        initAllSettingsControls()
 
         btnToggle.setOnClickListener {
             if (bridge.isRunning()) {
@@ -133,12 +160,56 @@ class MeowPlayActivity : AppCompatActivity(), MeowPlayBridge.BridgeListener {
         checkPermissionsAndStart()
     }
 
-    private fun initWifiControls() {
-        val currentMode = MeowPlayConfigManager.getWifiMode(this)
+    private fun initAllSettingsControls() {
+        // 1. Wi-Fi
+        rgWifiMode = findViewById(R.id.rgWifiMode)
+        rbModeHotspot = findViewById(R.id.rbModeHotspot)
+        rbModeDirect = findViewById(R.id.rbModeDirect)
+        layoutHotspotCredentials = findViewById(R.id.layoutHotspotCredentials)
+        etHotspotSsid = findViewById(R.id.etHotspotSsid)
+        etHotspotPassword = findViewById(R.id.etHotspotPassword)
+        rgHotspotBand = findViewById(R.id.rgHotspotBand)
+        rbBand5Ghz = findViewById(R.id.rbBand5Ghz)
+        rbBand24Ghz = findViewById(R.id.rbBand24Ghz)
+        rbBandAuto = findViewById(R.id.rbBandAuto)
+        btnSaveHotspot = findViewById(R.id.btnSaveHotspot)
+        btnOpenHotspotSettings = findViewById(R.id.btnOpenHotspotSettings)
+
+        // 2. Display
+        swRightHandDrive = findViewById(R.id.swRightHandDrive)
+        rgDockPosition = findViewById(R.id.rgDockPosition)
+        rbDockAuto = findViewById(R.id.rbDockAuto)
+        rbDockDriver = findViewById(R.id.rbDockDriver)
+        rbDockBottom = findViewById(R.id.rbDockBottom)
+        rgFps = findViewById(R.id.rgFps)
+        rbFps60 = findViewById(R.id.rbFps60)
+        rbFps30 = findViewById(R.id.rbFps30)
+        rgDisplayScale = findViewById(R.id.rgDisplayScale)
+        rbScale140 = findViewById(R.id.rbScale140)
+        rbScale154 = findViewById(R.id.rbScale154)
+        rbScale180 = findViewById(R.id.rbScale180)
+
+        // 3. Audio & System
+        rgAudioRouting = findViewById(R.id.rgAudioRouting)
+        rbAudioUsb = findViewById(R.id.rbAudioUsb)
+        rbAudioBt = findViewById(R.id.rbAudioBt)
+        swBufferedAudio = findViewById(R.id.swBufferedAudio)
+        swSpeechHighQuality = findViewById(R.id.swSpeechHighQuality)
+        swAutoStartBoot = findViewById(R.id.swAutoStartBoot)
+
+        // 4. Hardware & Identity
+        rgMfiTarget = findViewById(R.id.rgMfiTarget)
+        rbMfiLocal = findViewById(R.id.rbMfiLocal)
+        rbMfiUsb = findViewById(R.id.rbMfiUsb)
+        etAdapterName = findViewById(R.id.etAdapterName)
+        etOemLabel = findViewById(R.id.etOemLabel)
+        btnSaveAllSettings = findViewById(R.id.btnSaveAllSettings)
+
+        // Populate saved values
+        val currentWifiMode = MeowPlayConfigManager.getWifiMode(this)
         etHotspotSsid.setText(MeowPlayConfigManager.getHotspotSsid(this))
         etHotspotPassword.setText(MeowPlayConfigManager.getHotspotPassword(this))
-
-        if (currentMode == WirelessHotspotMode.WIFI_P2P) {
+        if (currentWifiMode == WirelessHotspotMode.WIFI_P2P) {
             rbModeDirect.isChecked = true
             layoutHotspotCredentials.visibility = View.GONE
         } else {
@@ -146,6 +217,52 @@ class MeowPlayActivity : AppCompatActivity(), MeowPlayBridge.BridgeListener {
             layoutHotspotCredentials.visibility = View.VISIBLE
         }
 
+        when (MeowPlayConfigManager.getHotspotBand(this)) {
+            ManualHotspotBand.GHZ_2_4 -> rbBand24Ghz.isChecked = true
+            ManualHotspotBand.AUTO -> rbBandAuto.isChecked = true
+            else -> rbBand5Ghz.isChecked = true
+        }
+
+        swRightHandDrive.isChecked = MeowPlayConfigManager.getRightHandDrive(this)
+
+        when (MeowPlayConfigManager.getDockPosition(this)) {
+            1 -> rbDockDriver.isChecked = true
+            2 -> rbDockBottom.isChecked = true
+            else -> rbDockAuto.isChecked = true
+        }
+
+        if (MeowPlayConfigManager.getFps(this) == 30) {
+            rbFps30.isChecked = true
+        } else {
+            rbFps60.isChecked = true
+        }
+
+        when (MeowPlayConfigManager.getWidthPhysicalMm(this)) {
+            140 -> rbScale140.isChecked = true
+            180 -> rbScale180.isChecked = true
+            else -> rbScale154.isChecked = true
+        }
+
+        if (MeowPlayConfigManager.getCarBluetoothAudio(this)) {
+            rbAudioBt.isChecked = true
+        } else {
+            rbAudioUsb.isChecked = true
+        }
+
+        swBufferedAudio.isChecked = MeowPlayConfigManager.getMainBufferedAudio(this)
+        swSpeechHighQuality.isChecked = MeowPlayConfigManager.getSpeechWithout8And16Khz(this)
+        swAutoStartBoot.isChecked = MeowPlayConfigManager.getAutoStartOnBoot(this)
+
+        if (MeowPlayConfigManager.getMfiTarget(this) == MfiTarget.USB_CH341) {
+            rbMfiUsb.isChecked = true
+        } else {
+            rbMfiLocal.isChecked = true
+        }
+
+        etAdapterName.setText(MeowPlayConfigManager.getAdapterName(this))
+        etOemLabel.setText(MeowPlayConfigManager.getOemLabel(this))
+
+        // Listeners
         rgWifiMode.setOnCheckedChangeListener { _, checkedId ->
             if (checkedId == R.id.rbModeHotspot) {
                 layoutHotspotCredentials.visibility = View.VISIBLE
@@ -161,25 +278,7 @@ class MeowPlayActivity : AppCompatActivity(), MeowPlayBridge.BridgeListener {
         }
 
         btnSaveHotspot.setOnClickListener {
-            val ssid = etHotspotSsid.text.toString().trim()
-            val pass = etHotspotPassword.text.toString().trim()
-
-            if (ssid.isEmpty()) {
-                Toast.makeText(this, "SSID cannot be empty", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            if (pass.length < 8 || pass.length > 63) {
-                Toast.makeText(this, "Password must be 8 to 63 characters", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            MeowPlayConfigManager.setHotspotSsid(this, ssid)
-            MeowPlayConfigManager.setHotspotPassword(this, pass)
-            MeowPlayConfigManager.setWifiMode(this, WirelessHotspotMode.MANUAL)
-
-            appendLog("Saved Wi-Fi Hotspot credentials: SSID='$ssid', Key='$pass'")
-            Toast.makeText(this, "Hotspot credentials saved & applied!", Toast.LENGTH_SHORT).show()
-            bridge.reloadConfiguration()
+            saveHotspotCredentials()
         }
 
         btnOpenHotspotSettings.setOnClickListener {
@@ -200,6 +299,94 @@ class MeowPlayActivity : AppCompatActivity(), MeowPlayBridge.BridgeListener {
                 Toast.makeText(this, "Please open Hotspot settings in Android Settings", Toast.LENGTH_SHORT).show()
             }
         }
+
+        btnSaveAllSettings.setOnClickListener {
+            saveAllSettings()
+        }
+    }
+
+    private fun saveHotspotCredentials() {
+        val ssid = etHotspotSsid.text.toString().trim()
+        val pass = etHotspotPassword.text.toString().trim()
+
+        if (ssid.isEmpty()) {
+            Toast.makeText(this, "SSID cannot be empty", Toast.LENGTH_SHORT).show()
+            return
+        }
+        if (pass.length < 8 || pass.length > 63) {
+            Toast.makeText(this, "Password must be 8 to 63 characters", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val band = when (rgHotspotBand.checkedRadioButtonId) {
+            R.id.rbBand24Ghz -> ManualHotspotBand.GHZ_2_4
+            R.id.rbBandAuto -> ManualHotspotBand.AUTO
+            else -> ManualHotspotBand.GHZ_5
+        }
+
+        MeowPlayConfigManager.setHotspotSsid(this, ssid)
+        MeowPlayConfigManager.setHotspotPassword(this, pass)
+        MeowPlayConfigManager.setHotspotBand(this, band)
+        MeowPlayConfigManager.setWifiMode(this, WirelessHotspotMode.MANUAL)
+
+        appendLog("Saved Wi-Fi Hotspot: SSID='$ssid', Band=${band.name}")
+        Toast.makeText(this, "Wi-Fi Hotspot settings saved & applied!", Toast.LENGTH_SHORT).show()
+        bridge.reloadConfiguration()
+    }
+
+    private fun saveAllSettings() {
+        // Save Wi-Fi
+        val ssid = etHotspotSsid.text.toString().trim()
+        val pass = etHotspotPassword.text.toString().trim()
+        if (ssid.isNotEmpty()) MeowPlayConfigManager.setHotspotSsid(this, ssid)
+        if (pass.length in 8..63) MeowPlayConfigManager.setHotspotPassword(this, pass)
+
+        val band = when (rgHotspotBand.checkedRadioButtonId) {
+            R.id.rbBand24Ghz -> ManualHotspotBand.GHZ_2_4
+            R.id.rbBandAuto -> ManualHotspotBand.AUTO
+            else -> ManualHotspotBand.GHZ_5
+        }
+        MeowPlayConfigManager.setHotspotBand(this, band)
+
+        // Save Display & Interface
+        MeowPlayConfigManager.setRightHandDrive(this, swRightHandDrive.isChecked)
+
+        val dockPos = when (rgDockPosition.checkedRadioButtonId) {
+            R.id.rbDockDriver -> 1
+            R.id.rbDockBottom -> 2
+            else -> 0
+        }
+        MeowPlayConfigManager.setDockPosition(this, dockPos)
+
+        val fps = if (rgFps.checkedRadioButtonId == R.id.rbFps30) 30 else 60
+        MeowPlayConfigManager.setFps(this, fps)
+
+        val widthMm = when (rgDisplayScale.checkedRadioButtonId) {
+            R.id.rbScale140 -> 140
+            R.id.rbScale180 -> 180
+            else -> 154
+        }
+        MeowPlayConfigManager.setWidthPhysicalMm(this, widthMm)
+
+        // Save Audio & System
+        val carBtAudio = rgAudioRouting.checkedRadioButtonId == R.id.rbAudioBt
+        MeowPlayConfigManager.setCarBluetoothAudio(this, carBtAudio)
+        MeowPlayConfigManager.setMainBufferedAudio(this, swBufferedAudio.isChecked)
+        MeowPlayConfigManager.setSpeechWithout8And16Khz(this, swSpeechHighQuality.isChecked)
+        MeowPlayConfigManager.setAutoStartOnBoot(this, swAutoStartBoot.isChecked)
+
+        // Save Hardware & Identity
+        val mfiTarget = if (rgMfiTarget.checkedRadioButtonId == R.id.rbMfiUsb) MfiTarget.USB_CH341 else MfiTarget.LOCAL
+        MeowPlayConfigManager.setMfiTarget(this, mfiTarget)
+
+        val adapterName = etAdapterName.text.toString().trim().ifBlank { MeowPlayConfigManager.DEFAULT_ADAPTER_NAME }
+        val oemLabel = etOemLabel.text.toString().trim().ifBlank { MeowPlayConfigManager.DEFAULT_OEM_LABEL }
+        MeowPlayConfigManager.setAdapterName(this, adapterName)
+        MeowPlayConfigManager.setOemLabel(this, oemLabel)
+
+        appendLog("Applied Settings: FPS=$fps, RHD=${swRightHandDrive.isChecked}, Dock=$dockPos, Scale=${widthMm}mm, Audio=${if (carBtAudio) "DirectBT" else "MeowPlayUSB"}, MFi=${mfiTarget.name}")
+        Toast.makeText(this, "All settings saved and applied! 🐱", Toast.LENGTH_SHORT).show()
+        bridge.reloadConfiguration()
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -239,65 +426,64 @@ class MeowPlayActivity : AppCompatActivity(), MeowPlayBridge.BridgeListener {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_ADVERTISE) != PackageManager.PERMISSION_GRANTED) {
                 permissionsNeeded.add(Manifest.permission.BLUETOOTH_ADVERTISE)
             }
-        }
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            permissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION)
+        } else {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                permissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION)
+            }
         }
 
         if (permissionsNeeded.isNotEmpty()) {
+            appendLog("Requesting runtime permissions: ${permissionsNeeded.joinToString()}")
             permissionLauncher.launch(permissionsNeeded.toTypedArray())
         } else {
             MeowPlayService.start(this)
         }
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
         bridge.addListener(this)
         updateUiState()
     }
 
-    override fun onPause() {
+    override fun onStop() {
         bridge.removeListener(this)
-        super.onPause()
+        super.onStop()
     }
 
     private fun updateUiState() {
-        val running = bridge.isRunning()
-        val stereoConnected = bridge.isStereoConnected()
-        val carPlayActive = bridge.isCarPlayActive()
+        val isRunning = bridge.isRunning()
+        val isStereo = bridge.isStereoConnected()
+        val isCarPlay = bridge.isCarPlayActive()
 
-        btnToggle.text = if (running) getString(R.string.stop_service) else getString(R.string.start_service)
-        btnToggle.setBackgroundColor(
-            ContextCompat.getColor(
-                this,
-                if (running) R.color.card_border else R.color.accent_blue
-            )
-        )
-
-        val mode = MeowPlayConfigManager.getWifiMode(this)
-        val modeDesc = if (mode == WirelessHotspotMode.WIFI_P2P) {
-            "Wi-Fi Direct (P2P)"
+        if (isRunning) {
+            btnToggle.text = getString(R.string.stop_service)
+            btnToggle.setBackgroundColor(ContextCompat.getColor(this, R.color.card_border))
         } else {
-            "Hotspot: ${MeowPlayConfigManager.getHotspotSsid(this)}"
+            btnToggle.text = getString(R.string.start_service)
+            btnToggle.setBackgroundColor(ContextCompat.getColor(this, R.color.accent_blue))
         }
 
         when {
-            carPlayActive -> {
-                tvGlobalBadge.text = "ACTIVE"
+            isStereo && isCarPlay -> {
+                tvGlobalBadge.text = "STREAMING"
                 tvGlobalBadge.setTextColor(ContextCompat.getColor(this, R.color.accent_green))
-                tvGlobalBadge.setBackgroundColor(0x3330D158)
+                tvGlobalBadge.setBackgroundColor(0x2230D158)
             }
-            stereoConnected -> {
+            isStereo -> {
                 tvGlobalBadge.text = "STEREO READY"
                 tvGlobalBadge.setTextColor(ContextCompat.getColor(this, R.color.accent_blue))
-                tvGlobalBadge.setBackgroundColor(0x330A84FF)
+                tvGlobalBadge.setBackgroundColor(0x220A84FF)
             }
-            running -> {
-                tvGlobalBadge.text = "LISTENING"
+            isCarPlay -> {
+                tvGlobalBadge.text = "CARPLAY READY"
                 tvGlobalBadge.setTextColor(ContextCompat.getColor(this, R.color.accent_orange))
-                tvGlobalBadge.setBackgroundColor(0x33FF9F0A)
+                tvGlobalBadge.setBackgroundColor(0x22FF9F0A)
+            }
+            isRunning -> {
+                tvGlobalBadge.text = "WAITING"
+                tvGlobalBadge.setTextColor(ContextCompat.getColor(this, R.color.text_secondary))
+                tvGlobalBadge.setBackgroundColor(0x228E8E93)
             }
             else -> {
                 tvGlobalBadge.text = "STOPPED"
@@ -305,24 +491,38 @@ class MeowPlayActivity : AppCompatActivity(), MeowPlayBridge.BridgeListener {
                 tvGlobalBadge.setBackgroundColor(0x22636366)
             }
         }
+    }
 
-        if (!carPlayActive) {
-            tvCarPlayDetails.text = "Wireless Mode: $modeDesc | MFi: P-256 Offline"
+    private fun appendLog(msg: String) {
+        val timestamp = timeFmt.format(Date())
+        val formatted = "[$timestamp] $msg"
+        logLines.add(formatted)
+        if (logLines.size > 250) {
+            logLines.removeAt(0)
+        }
+
+        runOnUiThread {
+            tvLogs.text = logLines.joinToString("\n")
+            scrollLogs.post { scrollLogs.fullScroll(View.FOCUS_DOWN) }
         }
     }
 
     // ==========================================
-    // MeowPlayBridge.BridgeListener
+    // BridgeListener callbacks
     // ==========================================
 
     override fun onStereoStatusChanged(model: String, width: Int, height: Int, connected: Boolean) {
         runOnUiThread {
             if (connected) {
-                tvStereoStatus.text = "Connected: $model"
-                tvStereoDetails.text = "Canvas: ${width}x${height} | Protocol: WebLink AOA 2.0"
+                tvStereoStatus.text = getString(R.string.status_connected, model, width, height)
+                tvStereoStatus.setTextColor(ContextCompat.getColor(this, R.color.accent_green))
+                tvStereoDetails.text = "Pioneer WebLink USB Connected ($width x $height). Video stream output active."
+                appendLog("Pioneer WebLink USB Connected: $model ($width x $height)")
             } else {
                 tvStereoStatus.text = getString(R.string.status_not_connected)
-                tvStereoDetails.text = "Awaiting USB connection to Pioneer DMH-A240BT…"
+                tvStereoStatus.setTextColor(ContextCompat.getColor(this, R.color.text_primary))
+                tvStereoDetails.text = "Awaiting USB connection to Pioneer stereo…"
+                appendLog("Stereo disconnected.")
             }
             updateUiState()
         }
@@ -330,7 +530,8 @@ class MeowPlayActivity : AppCompatActivity(), MeowPlayBridge.BridgeListener {
 
     override fun onCarPlayStatusChanged(status: String) {
         runOnUiThread {
-            tvCarPlayStatus.text = status
+            tvCarPlayDetails.text = status
+            appendLog("CarPlay State: $status")
             updateUiState()
         }
     }
@@ -338,13 +539,16 @@ class MeowPlayActivity : AppCompatActivity(), MeowPlayBridge.BridgeListener {
     override fun onActiveSessionChanged(active: Boolean, deviceName: String?) {
         runOnUiThread {
             if (active) {
-                tvCarPlayStatus.text = "Connected: ${deviceName ?: "iPhone"}"
-                tvCarPlayDetails.text = "AirPlay 1024x600@60fps | Zero-Transcode Annex B Pass-through"
+                tvCarPlayStatus.text = getString(R.string.carplay_connected)
+                tvCarPlayStatus.setTextColor(ContextCompat.getColor(this, R.color.accent_green))
+                tvCarPlayDetails.text = "Connected iPhone: ${deviceName ?: "iOS Device"}"
+                appendLog("Wireless CarPlay Active! Connected to ${deviceName ?: "iPhone"}.")
             } else {
                 tvCarPlayStatus.text = getString(R.string.carplay_waiting)
+                tvCarPlayStatus.setTextColor(ContextCompat.getColor(this, R.color.text_primary))
                 val mode = MeowPlayConfigManager.getWifiMode(this)
-                val modeDesc = if (mode == WirelessHotspotMode.WIFI_P2P) "Wi-Fi Direct" else "Hotspot (${MeowPlayConfigManager.getHotspotSsid(this)})"
-                tvCarPlayDetails.text = "Mode: $modeDesc | MFi Local P-256 Auth: Active"
+                val ssid = MeowPlayConfigManager.getHotspotSsid(this)
+                tvCarPlayDetails.text = if (mode == WirelessHotspotMode.MANUAL) "Hotspot SSID: $ssid" else "Wi-Fi Direct (P2P)"
             }
             updateUiState()
         }
@@ -358,32 +562,11 @@ class MeowPlayActivity : AppCompatActivity(), MeowPlayBridge.BridgeListener {
                 WebLinkTouchPoint.STATE_UP -> "UP"
                 else -> "${point.state}"
             }
-            tvTouchStatus.text = String.format(
-                Locale.US,
-                "ID:%d State:%s Raw:(%d, %d) Norm:(%.3f, %.3f)",
-                point.id, stateName, point.posX, point.posY, normX, normY
-            )
+            tvTouchStatus.text = "Touch #${point.id} [$stateName] at (${point.posX}, ${point.posY}) -> norm (%.3f, %.3f)".format(normX, normY)
         }
     }
 
     override fun onLog(message: String) {
-        runOnUiThread {
-            appendLog(message)
-        }
-    }
-
-    private fun appendLog(msg: String) {
-        val timestamp = timeFmt.format(Date())
-        val line = "[$timestamp] $msg"
-        logLines.add(line)
-        if (logLines.size > 150) {
-            logLines.removeAt(0)
-        }
-        val sb = StringBuilder()
-        for (l in logLines) {
-            sb.append(l).append("\n")
-        }
-        tvLogs.text = sb.toString()
-        scrollLogs.post { scrollLogs.fullScroll(ScrollView.FOCUS_DOWN) }
+        appendLog(message)
     }
 }

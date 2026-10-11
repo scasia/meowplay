@@ -12,4 +12,11 @@
     <string name="stop_service">Stop MeowPlay</string>
     <string name="notification_title">MeowPlay Running</string>
     <string name="notification_desc">Bridging Apple CarPlay and WebLink stereo</string>
+
+    <!-- Settings Headers -->
+    <string name="settings_header_wifi">CARPLAY WI-FI &amp; NETWORKING</string>
+    <string name="settings_header_display">DISPLAY &amp; CARPLAY INTERFACE</string>
+    <string name="settings_header_audio">AUDIO &amp; SYSTEM BEHAVIOR</string>
+    <string name="settings_header_hardware">HARDWARE &amp; CARPLAY IDENTITY</string>
+    <string name="btn_save_all_settings">Save &amp; Apply All Settings</string>
 </resources>

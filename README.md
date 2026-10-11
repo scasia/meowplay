@@ -1,4 +1,4 @@
-# MeowPlay 🐱
+# meowplay 
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Platform](https://img.shields.io/badge/Platform-Android%207.1%2B-green.svg)](https://developer.android.com)
@@ -7,6 +7,10 @@
 **MeowPlay** turns any Android device (phone, tablet, or headless dongle) into a wireless **Apple CarPlay adapter for WebLink car stereos** (such as Pioneer AVH and DMH series).
 
 Instead of being restricted to the stock WebLink apps, MeowPlay establishes a native wireless Apple CarPlay connection with your iPhone and streams high-performance H.264 video, audio, and touchscreen interactions directly over USB to your car head unit.
+
+
+!!IF YOU ARE ALERGIC TO "AI SLOP" AVOID THIS APP. IT HAS BEEN AGENTICALLY CODED USING GEMINI. IT WORKS BUT THERE IS NO FURTHER GUARANTEE. THE DEVELOPER IS NOT RESPONSIBLE FOR THE RELIABILITY OF THE VIDEO STREAM, CONNECTION, OR WHETHER A KID ON A KUKIRIN CRASHES INTO YOUR CAR.!!
+
 
 ---
 
@@ -21,37 +25,10 @@ Instead of being restricted to the stock WebLink apps, MeowPlay establishes a na
 - 🛠 **Built-in Diagnostic Console**: Full selectable and copyable real-time event logs for connection debugging, iAP2 status, and video frame rate monitoring.
 - 🚀 **Background Service & Auto-Boot**: Foreground Android service with wake-lock support and `BOOT_COMPLETED` receiver for seamless in-car operation.
 
----
-
-## 📐 Architecture
-
-```
-┌─────────────────┐             Bluetooth / Wi-Fi            ┌─────────────────────────────┐
-│                 │ ◄──────────────────────────────────────► │                             │
-│   Apple iPhone  │                                          │      Android Device         │
-│  (Wireless CP)  │ ═══════════════════════════════════════► │   running MeowPlay 🐱       │
-│                 │     H.264 Video / Audio / iAP2           │                             │
-└─────────────────┘                                          └──────────────┬──────────────┘
-                                                                            │
-                                                                            │ USB AOA / WebLink
-                                                                            │ Protocol
-                                                                            ▼
-                                                             ┌─────────────────────────────┐
-                                                             │     Pioneer Car Stereo      │
-                                                             │      (WebLink Host)         │
-                                                             │  1024x600 Hardware Decoder  │
-                                                             └─────────────────────────────┘
-```
-
----
-
 ## 📋 Requirements
 
 ### Hardware
-1. **Android Device**: Running Android 7.1 (API 25) or higher, with USB Accessory (AOA 2.0) support, Wi-Fi, and Bluetooth.
-2. **Car Head Unit**: Pioneer or compatible aftermarket stereo supporting **WebLink** (e.g. AVH-ZL5150BT, DMH-Z5350BT, AVH-2550NEX, etc.).
-3. **USB Cable**: Good quality data cable connecting the Android device to the car stereo's primary USB port.
-4. **iPhone**: iPhone 5 or newer running iOS 12 or higher.
+**Android Device**: Running Android 7.1 (API 25) or higher, with USB Accessory (AOA 2.0) support, Wi-Fi, and Bluetooth.
 
 ---
 
@@ -123,7 +100,6 @@ MeowPlay is built upon pioneering open-source automotive reverse engineering eff
 
 - **[DiPlay](https://github.com/shilapi/DiPlay) & [xcertplay](https://github.com/shilapi)**: Core CarPlay protocol stack, iAP2 implementation, and offline MFi authentication architecture.
 - **DiAuto**: Research on wireless CarPlay dongle reverse engineering.
-- **Abalta Technologies**: Creators of WebLink protocol.
 
 ---
 

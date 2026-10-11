@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Pioneer & Foryouge Automotive Headunits -->
+    <usb-accessory model="XL_AVH" manufacturer="com.foryouge" />
+    <usb-accessory model="XL_AVH" />
+    <usb-accessory manufacturer="com.foryouge" />
+
+    <!-- Abalta Technologies WebLink Accessories -->
+    <usb-accessory model="WebLinkHost" manufacturer="Abalta Technologies" />
+    <usb-accessory model="WebLinkHost" />
+    <usb-accessory manufacturer="Abalta Technologies" />
+
+    <!-- SmartLink / Generic WebLink accessories -->
+    <usb-accessory model="smartlinkClient" />
+    <usb-accessory model="weblinkClient" />
+</resources>

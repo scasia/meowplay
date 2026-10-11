@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">MeowPlay</string>
+    <string name="adapter_title">MeowPlay 🐱</string>
+    <string name="weblink_header">Car Stereo (WebLink USB)</string>
+    <string name="carplay_header">Apple CarPlay (Wireless)</string>
+    <string name="touch_header">Touchscreen Input</string>
+    <string name="status_not_connected">Stereo Disconnected</string>
+    <string name="status_connected">Connected: %1$s (%2$dx%3$d)</string>
+    <string name="carplay_waiting">Waiting for iPhone connection…</string>
+    <string name="carplay_connected">Active CarPlay Session</string>
+    <string name="start_service">Start MeowPlay</string>
+    <string name="stop_service">Stop MeowPlay</string>
+    <string name="notification_title">MeowPlay Running</string>
+    <string name="notification_desc">Bridging Apple CarPlay and WebLink stereo</string>
+</resources>

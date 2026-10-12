@@ -529,6 +529,16 @@
                     android:textColor="@color/text_primary"
                     android:textSize="13sp"
                     android:checked="false"
+                    android:layout_marginBottom="8dp" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/swStopCarPlayOnDisconnect"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Stop CarPlay when Stereo Disconnected (&gt; 5s)"
+                    android:textColor="@color/text_primary"
+                    android:textSize="13sp"
+                    android:checked="false"
                     android:layout_marginBottom="4dp" />
             </LinearLayout>
 

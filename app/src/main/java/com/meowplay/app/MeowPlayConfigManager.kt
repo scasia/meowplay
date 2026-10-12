@@ -43,6 +43,7 @@ object MeowPlayConfigManager {
     private const val KEY_MAIN_BUFFERED_AUDIO = "main_buffered_audio"
     private const val KEY_SPEECH_HIGH_QUALITY = "speech_without_8_16_khz"
     private const val KEY_AUTO_START_BOOT = "auto_start_on_boot"
+    private const val KEY_STOP_CARPLAY_ON_DISCONNECT = "stop_carplay_on_disconnect"
 
     // Hardware & Identity
     private const val KEY_MFI_TARGET = "mfi_target"
@@ -235,6 +236,16 @@ object MeowPlayConfigManager {
     fun setAutoStartOnBoot(context: Context, enabled: Boolean) {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         prefs.edit().putBoolean(KEY_AUTO_START_BOOT, enabled).apply()
+    }
+
+    fun getStopCarPlayOnDisconnect(context: Context): Boolean {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        return prefs.getBoolean(KEY_STOP_CARPLAY_ON_DISCONNECT, false)
+    }
+
+    fun setStopCarPlayOnDisconnect(context: Context, enabled: Boolean) {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        prefs.edit().putBoolean(KEY_STOP_CARPLAY_ON_DISCONNECT, enabled).apply()
     }
 
     // -------------------------------------------------------------------------

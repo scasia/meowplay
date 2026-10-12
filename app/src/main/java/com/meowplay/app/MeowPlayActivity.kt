@@ -80,6 +80,7 @@ class MeowPlayActivity : AppCompatActivity(), MeowPlayBridge.BridgeListener {
     private lateinit var swBufferedAudio: SwitchCompat
     private lateinit var swSpeechHighQuality: SwitchCompat
     private lateinit var swAutoStartBoot: SwitchCompat
+    private lateinit var swStopCarPlayOnDisconnect: SwitchCompat
 
     // 4. Hardware & Identity Controls
     private lateinit var rgMfiTarget: RadioGroup
@@ -196,6 +197,7 @@ class MeowPlayActivity : AppCompatActivity(), MeowPlayBridge.BridgeListener {
         swBufferedAudio = findViewById(R.id.swBufferedAudio)
         swSpeechHighQuality = findViewById(R.id.swSpeechHighQuality)
         swAutoStartBoot = findViewById(R.id.swAutoStartBoot)
+        swStopCarPlayOnDisconnect = findViewById(R.id.swStopCarPlayOnDisconnect)
 
         // 4. Hardware & Identity
         rgMfiTarget = findViewById(R.id.rgMfiTarget)
@@ -252,6 +254,10 @@ class MeowPlayActivity : AppCompatActivity(), MeowPlayBridge.BridgeListener {
         swBufferedAudio.isChecked = MeowPlayConfigManager.getMainBufferedAudio(this)
         swSpeechHighQuality.isChecked = MeowPlayConfigManager.getSpeechWithout8And16Khz(this)
         swAutoStartBoot.isChecked = MeowPlayConfigManager.getAutoStartOnBoot(this)
+        swStopCarPlayOnDisconnect.isChecked = MeowPlayConfigManager.getStopCarPlayOnDisconnect(this)
+        swStopCarPlayOnDisconnect.setOnCheckedChangeListener { _, isChecked ->
+            MeowPlayConfigManager.setStopCarPlayOnDisconnect(this, isChecked)
+        }
 
         if (MeowPlayConfigManager.getMfiTarget(this) == MfiTarget.USB_CH341) {
             rbMfiUsb.isChecked = true
@@ -374,6 +380,7 @@ class MeowPlayActivity : AppCompatActivity(), MeowPlayBridge.BridgeListener {
         MeowPlayConfigManager.setMainBufferedAudio(this, swBufferedAudio.isChecked)
         MeowPlayConfigManager.setSpeechWithout8And16Khz(this, swSpeechHighQuality.isChecked)
         MeowPlayConfigManager.setAutoStartOnBoot(this, swAutoStartBoot.isChecked)
+        MeowPlayConfigManager.setStopCarPlayOnDisconnect(this, swStopCarPlayOnDisconnect.isChecked)
 
         // Save Hardware & Identity
         val mfiTarget = if (rgMfiTarget.checkedRadioButtonId == R.id.rbMfiUsb) MfiTarget.USB_CH341 else MfiTarget.LOCAL

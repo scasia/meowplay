@@ -59,6 +59,14 @@ class MeowPlayBridge(private val context: Context) : WebLinkManager.Listener {
     private var displayWidth = 1024
     private var displayHeight = 600
     private var running = false
+    private var stereoDisconnectTimeoutRunnable: Runnable? = null
+
+    private fun cancelStereoDisconnectTimeout() {
+        stereoDisconnectTimeoutRunnable?.let {
+            mainHandler.removeCallbacks(it)
+            stereoDisconnectTimeoutRunnable = null
+        }
+    }
 
     private val mediaSink = object : MediaSink {
         private var videoDiagnosticHandler: ((String) -> Unit)? = null
@@ -168,6 +176,7 @@ class MeowPlayBridge(private val context: Context) : WebLinkManager.Listener {
     fun stop() {
         if (!running) return
         running = false
+        cancelStereoDisconnectTimeout()
         log("Stopping MeowPlay Adapter Bridge...")
 
         stopCarPlayController()
@@ -263,6 +272,7 @@ class MeowPlayBridge(private val context: Context) : WebLinkManager.Listener {
     // ==========================================
 
     override fun onStereoConnected(model: String, width: Int, height: Int) {
+        cancelStereoDisconnectTimeout()
         stereoConnected = true
         stereoModel = model
         displayWidth = if (width > 0) width else 1024
@@ -271,6 +281,11 @@ class MeowPlayBridge(private val context: Context) : WebLinkManager.Listener {
         log("Pioneer WebLink USB Connected: $model ($displayWidth x $displayHeight)")
         postToListeners { it.onStereoStatusChanged(model, displayWidth, displayHeight, true) }
 
+        if (running && carPlayController == null) {
+            log("Stereo reconnected. Resuming CarPlay engine...")
+            startCarPlayController()
+        }
+
         requestKeyFrame()
     }
 
@@ -278,6 +293,20 @@ class MeowPlayBridge(private val context: Context) : WebLinkManager.Listener {
         stereoConnected = false
         log("Pioneer WebLink USB Disconnected.")
         postToListeners { it.onStereoStatusChanged(stereoModel, displayWidth, displayHeight, false) }
+
+        if (MeowPlayConfigManager.getStopCarPlayOnDisconnect(context)) {
+            cancelStereoDisconnectTimeout()
+            val timeoutRunnable = Runnable {
+                if (!stereoConnected && running) {
+                    log("WebLink disconnected for > 5 seconds. Stopping CarPlay connection...")
+                    stopCarPlayController()
+                    postToListeners { it.onActiveSessionChanged(false, null) }
+                }
+            }
+            stereoDisconnectTimeoutRunnable = timeoutRunnable
+            mainHandler.postDelayed(timeoutRunnable, 5000L)
+            log("Stereo disconnected. 5-second countdown to stop CarPlay started...")
+        }
     }
 
     override fun onTouch(point: WebLinkTouchPoint, normX: Double, normY: Double) {
